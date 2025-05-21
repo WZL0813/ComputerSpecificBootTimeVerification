@@ -1,2 +1,5 @@
-# ComputerSpecificBootTimeVerification
-ComputerSpecificBootTimeVerificationByRyokuryuneko
+# ComputerSpecificBootTimeVerification 计算机特定的启动时间验证
+前提情要：在学校中，总会有很多顽皮的“学生”，早起去玩班里的一体机，为了杜绝此情况，我写了一个 计算机特定的启动时间验证 程序。
+它的基本功能：开机自启、未输入正确密码无法关闭弹窗、[默认]7:10分前开机将无法使用（7:10）后自动解锁
+默认和直接编译好的exe的密码3180。推荐改掉，去改window.cpp中的const std::wstring PASSWORD = L"3180";就好了
+*本产品使用C/C++语言编写

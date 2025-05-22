@@ -178,7 +178,7 @@ int main() {
         }
         
         // 确保Standard.json存在
-        fs::path stdFile = getAppDataPath() / "Standard.json";
+        fs::path stdFile = getAppDataPath() / "./Time/Standard.json";
         if (!fs::exists(stdFile)) {
             fs::create_directories(stdFile.parent_path());
             json stdData;

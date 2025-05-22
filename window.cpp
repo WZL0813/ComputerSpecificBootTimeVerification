@@ -52,7 +52,7 @@ std::string getStandardTime() {
     return "";
 }
 
-// 检查是否到达标准时间
+// 检查是否到达标准时间（精确到秒）
 bool isTimeUp() {
     std::string standardTime = getStandardTime();
     if (standardTime.empty()) {
@@ -65,8 +65,17 @@ bool isTimeUp() {
     
     char currentTime[20];
     strftime(currentTime, sizeof(currentTime), "%H:%M:%S", &ltm);
-
-    return std::string(currentTime) >= standardTime;
+    
+    // 调试输出当前时间和标准时间
+    OutputDebugStringW((L"当前时间: " + std::wstring(currentTime, currentTime + strlen(currentTime)) + L"\n").c_str());
+    OutputDebugStringW((L"标准时间: " + std::wstring(standardTime.begin(), standardTime.end()) + L"\n").c_str());
+    
+    // 直接比较时间字符串（格式HH:MM:SS）
+    bool result = std::string(currentTime) >= standardTime;
+    if(result) {
+        OutputDebugStringW(L"已达到标准时间，准备关闭窗口\n");
+    }
+    return result;
 }
 
 // 键盘钩子回调函数
@@ -247,11 +256,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 void CALLBACK TimerProc(HWND hWnd, UINT /*msg*/, UINT_PTR /*id*/, DWORD /*time*/) {
     if (isTimeUp()) {
         isVerified = true;
+        // 修改if.json为yes
+        fs::path ifFile = getAppDataPath().parent_path() / "if.json";
+        json config;
+        config["value"] = "yes";
+        std::ofstream(ifFile) << config.dump(4);
+        
         DestroyWindow(hWnd);
     }
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, int /*nCmdShow*/) {
+    // 隐藏控制台窗口
+    FreeConsole();
     // 注册窗口类
     const wchar_t* WINDOW_CLASS = L"WindowClass";
     
